@@ -1,5 +1,3 @@
-/** Placeholder types for Coordinator; expand with Claim / Agent / Landing on Day 2. */
-
 export type AgentStatus =
   | 'planning'
   | 'editing'
@@ -18,4 +16,16 @@ export interface Claim {
   symbol: string | null;
   kind: ClaimKind;
   createdAt: number;
+}
+
+export interface Overlap {
+  level: 'symbol' | 'file';
+  path: string;
+  symbol: string | null;
+  attemptId: string;
+}
+
+export interface RadarParty {
+  attemptId: string;
+  startedAt: number;
 }
