@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Envoy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;800;900&family=Martian+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;700&display=swap"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="masthead-copy">
+        <p class="eyebrow">Merge control for parallel agents</p>
+        <h1 class="brand">Envoy</h1>
+        <p class="tagline">Many agents, one main branch.</p>
+        <div class="controls">
+          <button type="button" id="run-demo" class="run-demo">Run demo</button>
+          <p id="demo-status" class="demo-status" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <svg class="yard" viewBox="0 0 640 320" aria-hidden="true" focusable="false">
+        <g class="yard-ties">
+          <path d="M470 148v24M500 148v24M530 148v24M560 148v24M590 148v24M620 148v24" />
+        </g>
+        <g class="yard-tracks">
+          <path pathLength="100" class="track t1" d="M0 28 C 210 28, 280 160, 450 160 L640 160" />
+          <path pathLength="100" class="track t2" d="M0 94 C 190 94, 270 160, 450 160 L640 160" />
+          <path pathLength="100" class="track t3" d="M0 226 C 190 226, 270 160, 450 160 L640 160" />
+          <path pathLength="100" class="track t4" d="M0 292 C 210 292, 280 160, 450 160 L640 160" />
+          <path pathLength="100" class="track main" d="M0 160 L640 160" />
+        </g>
+        <g class="yard-pulses">
+          <path pathLength="100" class="pulse p1" d="M0 28 C 210 28, 280 160, 450 160 L640 160" />
+          <path pathLength="100" class="pulse p2" d="M0 226 C 190 226, 270 160, 450 160 L640 160" />
+          <path pathLength="100" class="pulse p3" d="M0 94 C 190 94, 270 160, 450 160 L640 160" />
+          <path pathLength="100" class="pulse p4" d="M0 292 C 210 292, 280 160, 450 160 L640 160" />
+        </g>
+        <circle class="junction" cx="450" cy="160" r="7" />
+      </svg>
+    </header>
+
+    <main class="panels">
+      <section class="panel panel-radar" aria-labelledby="radar-heading">
+        <header class="panel-head">
+          <span class="lamp" aria-hidden="true"></span>
+          <h2 id="radar-heading">Radar</h2>
+          <span class="panel-note" aria-hidden="true">claims &amp; overlaps</span>
+        </header>
+        <div id="radar" class="panel-body" data-empty="No active claims yet."></div>
+      </section>
+      <section class="panel panel-timeline" aria-labelledby="timeline-heading">
+        <header class="panel-head">
+          <span class="lamp" aria-hidden="true"></span>
+          <h2 id="timeline-heading">Main timeline</h2>
+          <span class="panel-note" aria-hidden="true">commits &amp; intent</span>
+        </header>
+        <div id="timeline" class="panel-body" data-empty="No commits on main yet."></div>
+      </section>
+      <section class="panel panel-lineage" aria-labelledby="lineage-heading">
+        <header class="panel-head">
+          <span class="lamp" aria-hidden="true"></span>
+          <h2 id="lineage-heading">Lineage</h2>
+          <span class="panel-note" aria-hidden="true">attempt chains</span>
+        </header>
+        <div id="lineage" class="panel-body" data-empty="No attempt chains yet."></div>
+      </section>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
