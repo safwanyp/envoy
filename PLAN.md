@@ -305,7 +305,7 @@ Today is Sun Oct 11. Submit on **Wed Oct 14** (confirm the cutoff time/zone on t
 - [ ] **Spike C:** create an event subscription for main `pushed` → queue → consumer logs the event.
 - [ ] **Spike D:** pick the LLM. Run 10 tool-call round trips and keep the most reliable model.
 - [ ] `scripts/seed.js` + `demo/seed-repo`.
-- [ ] Pure modules + tests: `intent.js`, `symbols.js`, `radar.js`.
+- [x] Pure modules + tests: `intent.js`, `symbols.js`, `radar.js`.
 
 ### Day 2 (Mon 12 – Tue 13 midday): core loop
 - [ ] AgentRunner end to end for one agent: fork → plan → edit → commit with trailers → push fork.
