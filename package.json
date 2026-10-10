@@ -1,0 +1,32 @@
+{
+  "name": "envoy",
+  "private": true,
+  "type": "module",
+  "description": "Many agents, one main branch — conflict radar and intent replay on Cloudflare Artifacts",
+  "scripts": {
+    "dev": "cf dev",
+    "dev:cf": "cf dev --mode cf",
+    "build": "cf build",
+    "deploy": "cf deploy --mode cf",
+    "types": "cf workers types",
+    "types:cf": "cf workers types --mode cf",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.ui.json",
+    "test": "node --test 'src/**/*.test.js'",
+    "seed": "node scripts/seed.js",
+    "subscribe": "node scripts/subscribe.js"
+  },
+  "dependencies": {
+    "isomorphic-git": "^1.36.1"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "beta",
+    "@types/node": "^26.6.5",
+    "cf": "1.0.0-beta.14",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@9.15.9"
+}
