@@ -36,6 +36,26 @@ export function extractSymbols(source) {
 }
 
 /**
+ * @param {Record<string, string>} before
+ * @param {Record<string, string>} after
+ * @returns {{ path: string, symbols: string[] }[]}
+ */
+export function symbolChanges(before, after) {
+  const paths = [...new Set([...Object.keys(before), ...Object.keys(after)])].sort();
+  /** @type {{ path: string, symbols: string[] }[]} */
+  const changes = [];
+  for (const path of paths) {
+    if (!path.endsWith('.js')) continue;
+    const left = before[path] ?? '';
+    const right = after[path] ?? '';
+    if (left === right) continue;
+    const symbols = changedSymbols(left, right);
+    if (symbols.length > 0) changes.push({ path, symbols });
+  }
+  return changes;
+}
+
+/**
  * @param {string} before
  * @param {string} after
  * @returns {string[]}

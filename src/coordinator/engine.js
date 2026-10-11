@@ -61,6 +61,8 @@ export const DEMO_WORK = {
  * @property {string} attemptId
  * @property {Record<string, string>} files
  * @property {ReplayContext | null} replay
+ * @property {string} prompt
+ * @property {string[]} touches
  */
 
 /**
@@ -71,11 +73,12 @@ export const DEMO_WORK = {
  * @param {Object} options
  * @param {Record<string, string>} options.files
  * @param {DemoTask[]} options.tasks
- * @param {(ctx: EditContext) => Record<string, string>} [options.edit]
+ * @param {(ctx: EditContext) => Record<string, string> | Promise<Record<string, string>>} [options.edit]
  * @param {Record<string, number>} [options.workTicks]
  * @param {number} [options.maxReplays]
  * @param {number} [options.replayDelay]
  * @param {(snapshot: ProjectSnapshot) => void} [options.onFrame]
+ * @param {(info: { attemptId: string, agent: string, taskId: string, message: string, files: Record<string, string> }) => void | Promise<void>} [options.onFork]
  * @returns {Promise<ProjectSnapshot & { files: Record<string, string> }>}
  */
 export async function runProject(options) {
@@ -84,6 +87,7 @@ export async function runProject(options) {
   const maxReplays = options.maxReplays ?? 2;
   const replayDelay = options.replayDelay ?? 0;
   const onFrame = options.onFrame ?? (() => undefined);
+  const onFork = options.onFork ?? (() => undefined);
   const identity = createIdentityClock();
   const repo = await initRepo(options.files, identity(), 'Seed the demo API');
   /** @type {Attempt[]} */
@@ -235,23 +239,31 @@ export async function runProject(options) {
     }
     try {
       const beforeTree = await readTree(repo.fs, repo.dir, attempt.baseCommit);
-      const would = edit({
-        taskId: attempt.taskId,
-        attemptId: attempt.attemptId,
-        files: beforeTree,
-        replay: null,
-      });
+      const would = await Promise.resolve(
+        edit({
+          taskId: attempt.taskId,
+          attemptId: attempt.attemptId,
+          files: beforeTree,
+          replay: null,
+          prompt: attempt.prompt,
+          touches: attempt.touches,
+        }),
+      );
       const previousDiff = Object.entries(would)
         .map(([path, text]) => `*** ${path}\n${text}`)
         .join('\n');
       const since = await commitsSince(attempt.baseCommit);
       const replay = attempt.replayOf ? buildReplayContext(since, previousDiff, parseTrailers) : null;
-      const changed = edit({
-        taskId: attempt.taskId,
-        attemptId: attempt.attemptId,
-        files: beforeTree,
-        replay,
-      });
+      const changed = await Promise.resolve(
+        edit({
+          taskId: attempt.taskId,
+          attemptId: attempt.attemptId,
+          files: beforeTree,
+          replay,
+          prompt: attempt.prompt,
+          touches: attempt.touches,
+        }),
+      );
       const intent = {
         summary: attempt.intent,
         rationale: attempt.prompt,
@@ -273,6 +285,13 @@ export async function runProject(options) {
         formatTrailers(intent),
         identity(),
       );
+      await onFork({
+        attemptId: attempt.attemptId,
+        agent: attempt.agent,
+        taskId: attempt.taskId,
+        message: formatTrailers(intent),
+        files: await readTree(repo.fs, repo.dir, attempt.forkName),
+      });
       const mainBefore = await head();
       const result = await landings.run(() =>
         landFork(repo.fs, repo.dir, attempt.forkName, attempt.baseCommit, identity()),
