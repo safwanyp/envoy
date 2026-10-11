@@ -1,4 +1,5 @@
 import { DurableObject } from 'cloudflare:workers';
+import { runSpikeA } from '../git/publish.js';
 
 /**
  * Per-project coordinator: agents, claims/radar, landing queue, intent log, WS hub.
@@ -38,6 +39,22 @@ export class Coordinator extends DurableObject {
         intents: [],
         landings: [],
       });
+    }
+
+    if (url.pathname === '/api/spike/a' && request.method === 'POST') {
+      const artifacts = this.env.ARTIFACTS;
+      if (!artifacts) {
+        return Response.json(
+          { ok: false, error: 'artifacts_unavailable' },
+          { status: 501 },
+        );
+      }
+      try {
+        return Response.json(await runSpikeA(artifacts));
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'spike failed';
+        return Response.json({ ok: false, error: 'spike_failed', message }, { status: 502 });
+      }
     }
 
     if (url.pathname === '/api/demo' && request.method === 'POST') {
