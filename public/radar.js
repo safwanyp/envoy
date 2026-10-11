@@ -33,14 +33,16 @@ export function renderRadar(root, state) {
     for (const [symbol, group] of bySymbol) {
       const line = document.createElement('div');
       line.className = 'radar-symbol';
-      const name = document.createElement('span');
+      const name = document.createElement('code');
       name.className = 'symbol-name';
       name.textContent = symbol;
       line.append(name);
       for (const claim of group) {
         const agent = state.agents.find((item) => item.attemptId === claim.attemptId);
+        const status = agent?.status ?? 'planning';
         const chip = document.createElement('span');
-        chip.className = `chip ${agentClass(agent?.agent ?? '')} status-${agent?.status ?? 'planning'}`;
+        chip.className = `chip ${agentClass(agent?.agent ?? '')} status-${status}`;
+        chip.title = status;
         chip.textContent = agent?.agent ?? claim.attemptId;
         line.append(chip);
       }

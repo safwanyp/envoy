@@ -19,9 +19,18 @@ export function renderLineage(root, state) {
     const list = document.createElement('ol');
     for (const attempt of group.attempts) {
       const item = document.createElement('li');
-      item.className = `status-${attempt.status}`;
-      const replay = attempt.replayOf ? ` replay of ${attempt.replayOf}` : '';
-      item.textContent = `${attempt.attemptId} ${attempt.status}${replay}`;
+      const id = document.createElement('code');
+      id.textContent = attempt.attemptId;
+      const status = document.createElement('span');
+      status.className = `pill status-${attempt.status}`;
+      status.textContent = attempt.status;
+      item.append(id, status);
+      if (attempt.replayOf) {
+        const replay = document.createElement('span');
+        replay.className = 'replay-of';
+        replay.textContent = `replay of ${attempt.replayOf}`;
+        item.append(replay);
+      }
       list.append(item);
     }
     block.append(list);
