@@ -36,7 +36,10 @@ export function renderRadar(root, state) {
       const name = document.createElement('code');
       name.className = 'symbol-name';
       name.textContent = symbol;
-      line.append(name);
+      name.title = symbol;
+      const chips = document.createElement('span');
+      chips.className = 'chips';
+      line.append(name, chips);
       for (const claim of group) {
         const agent = state.agents.find((item) => item.attemptId === claim.attemptId);
         const status = agent?.status ?? 'planning';
@@ -44,7 +47,7 @@ export function renderRadar(root, state) {
         chip.className = `chip ${agentClass(agent?.agent ?? '')} status-${status}`;
         chip.title = status;
         chip.textContent = agent?.agent ?? claim.attemptId;
-        line.append(chip);
+        chips.append(chip);
       }
       row.append(line);
     }
