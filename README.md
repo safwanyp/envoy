@@ -25,7 +25,7 @@ The page streams each claim, yield, and landing. When it finishes:
 - **Radar** shows who claimed which file and symbol.
 - **Main timeline** lists commits. Each agent commit carries `Envoy-Intent` trailers.
 - **Lineage** shows agent-1's first attempt as replaying, then a later attempt as landed, marked as a replay of `a_1`.
-- The status line ends on the last landing. In this run that text is `agent-5 landed (merge)`. Earlier frames include `agent-2 yielded` and `agent-1 is stale and will replay`.
+- The page plays the run back one step about every 1.7 seconds, even though the local engine finishes in under a second. The banner under the top bar explains the current step, the elements it involves glow, and the **Event trail** keeps every step. The banner ends on `Done. 6 of 6 tasks landed on main, with 1 yield and 1 replay.`
 
 `pnpm test` checks the git result. Main contains rate limiting on `emailAddress`, stricter password checks, `GET /health`, request logging, and todo pagination. No file contains conflict markers.
 
