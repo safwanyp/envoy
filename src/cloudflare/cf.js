@@ -13,7 +13,7 @@ export class CfError extends Error {
 /**
  * @param {string} url
  * @param {string} token
- * @param {'GET' | 'POST'} method
+ * @param {'GET' | 'POST' | 'DELETE'} method
  * @param {Record<string, unknown>} [body]
  * @returns {Promise<unknown>}
  */
@@ -26,8 +26,9 @@ export async function cfEnvelope(url, token, method, body) {
     },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
+  const raw = await response.text();
   const payload = /** @type {{ success?: boolean, errors?: { message?: string }[], result?: unknown }} */ (
-    await response.json()
+    raw.length === 0 ? {} : JSON.parse(raw)
   );
   if (!response.ok || payload.success === false) {
     const message = payload.errors?.map((item) => item.message).filter(Boolean).join('; ') || response.statusText;
