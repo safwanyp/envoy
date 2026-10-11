@@ -1,0 +1,13 @@
+ts	phase	decision	why	evidence	result
+2026-10-11T02:33:53Z	start	starting the envoy finish run	full project, local demo ahead of polish, no deploy	agent this session	open
+2026-10-11T02:33:53Z	frame	done means tests, typecheck, and a local demo whose main has no conflict markers	the competition needs a working loop more than a production deploy	PLAN.md	predicate set
+2026-10-11T02:33:53Z	frame	demo agents are scripted when Workers AI is absent	local cf dev has no AI binding, and the demo has to be repeatable	PLAN.md day 3 deterministic demo	chosen
+2026-10-11T02:33:53Z	frame	one PR with separate commits	stacked PRs would fight over one working tree	user query	chosen
+2026-10-11T03:10:32Z	land	landed forks by fast-forward, clean merge, conflict replay, and disjoint overlay	main must stay free of conflict markers when two edits hit one line	commit f6d86ee, src/git/land.test.js	tests green
+2026-10-11T03:10:32Z	engine	ran the six demo tasks in one in-memory repo	rename lands first and stales rate limiting, which then replays onto emailAddress	commit 26ac525, src/coordinator/engine.test.js	tests green
+2026-10-11T03:10:32Z	engine	kept the demo on MemoryFS inside the coordinator	local cf dev has no Artifacts binding, and the button has to work without credentials	src/coordinator/coordinator.js streamDemo	chosen
+2026-10-11T03:10:32Z	shell	replaced using with Symbol.dispose in runSpikeA	node 22.23.3 rejects the using keyword, so scripts/seed.js crashed before the credential check	src/git/publish.js	seed exits 1 with the credential message
+2026-10-11T03:10:32Z	shell	left the Artifacts subscription body unverified against a live account	no credentials in this environment, and deploy was out of scope	scripts/subscribe.js	open
+2026-10-11T03:10:32Z	verify	posted the demo to local cf dev and read the saved snapshot	the button and the API have to show the same landed rate-limit replay	/opt/cursor/artifacts/demo-headers.txt, /opt/cursor/artifacts/state.json	HTTP 200, replayOf a_1, yield and stale present
+2026-10-11T03:10:32Z	verify	clicked Run demo in the browser on desktop and a narrow viewport	the panels have to render the snapshot a person sees	/opt/cursor/artifacts/envoy-run-demo.mp4	status ended at agent-5 landed (merge)
+2026-10-11T03:10:32Z	shell	deleted prose comments and kept the type JSDoc	comments that restated the code were removed after review	src/git/land.js, src/coordinator/engine.js	typecheck green

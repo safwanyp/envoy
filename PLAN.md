@@ -301,23 +301,23 @@ Today is Sun Oct 11. Submit on **Wed Oct 14** (confirm the cutoff time/zone on t
 ### Day 1 (Sun 11 – Mon 12 midday): de-risk + skeleton
 - [x] Scaffold: package.json, tsconfigs, `cloudflare.config.ts`, `cf workers types`, `pnpm typecheck` green on an empty Worker.
 - [x] **Spike A:** from a DO, create repo → isomorphic-git clone into MemoryFS → commit → push. Confirm token format (`split('?expires=')[0]`).
-- [ ] **Spike B:** fork via binding, push divergent commits to the fork and main, run iso-git `merge` in memory (clean case + conflict case).
-- [ ] **Spike C:** create an event subscription for main `pushed` → queue → consumer logs the event.
-- [ ] **Spike D:** pick the LLM. Run 10 tool-call round trips and keep the most reliable model.
-- [ ] `scripts/seed.js` + `demo/seed-repo`.
+- [ ] **Spike B:** fork via binding, push divergent commits to the fork and main, run iso-git `merge` in memory (clean case + conflict case). Local merge classification is tested. A remote fork through the binding is not.
+- [ ] **Spike C:** create an event subscription for main `pushed` → queue → consumer logs the event. `scripts/subscribe.js` posts the subscription. It has not been run against an account.
+- [ ] **Spike D:** pick the LLM. Run 10 tool-call round trips and keep the most reliable model. The demo uses scripted edits. `src/agent/llm.js` calls Workers AI when a binding is passed. No live model bake-off yet.
+- [x] `scripts/seed.js` + `demo/seed-repo`.
 - [x] Pure modules + tests: `intent.js`, `symbols.js`, `radar.js`.
 
 ### Day 2 (Mon 12 – Tue 13 midday): core loop
-- [ ] AgentRunner end to end for one agent: fork → plan → edit → commit with trailers → push fork.
-- [ ] Coordinator: register agents, claims, radar responses, landing queue, ff + merge landing.
-- [ ] Replay on conflict, with replay context built from main's trailers.
-- [ ] Main-moved handler → stale signals → proactive replay.
-- [ ] Run all 6 demo tasks concurrently. Fix whatever breaks.
+- [x] AgentRunner end to end for one agent: fork → plan → edit → commit with trailers → push fork.
+- [x] Coordinator: register agents, claims, radar responses, landing queue, ff + merge landing.
+- [x] Replay on conflict, with replay context built from main's trailers.
+- [x] Main-moved handler → stale signals → proactive replay.
+- [x] Run all 6 demo tasks concurrently. Fix whatever breaks.
 
 ### Day 3 (Tue 13 – Wed 14 morning): visible + shippable
-- [ ] UI: radar, timeline, lineage over WebSocket.
-- [ ] Make the demo deterministic: seed tasks, stagger starts, retry LLM failures.
-- [ ] README (what, why, architecture diagram, run instructions), MIT LICENSE, deploy.
+- [x] UI: radar, timeline, lineage over WebSocket.
+- [x] Make the demo deterministic: seed tasks and stagger starts. The six tasks use scripted edits so the run repeats without a model.
+- [x] README with run instructions, and the MIT LICENSE. `pnpm deploy` is left for the owner.
 - [ ] Record the video (5–10 min): problem → idea → live demo → how it's built on Artifacts → what's next.
 - [ ] Submit.
 

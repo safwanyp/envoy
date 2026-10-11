@@ -33,4 +33,4 @@ Each feature file: H1 + one paragraph, then exactly `Sub-features`, `How to get 
 
 - [Coordinator health](./coordinator-health.md) — `/api/health` readiness for the demo project.
 - [Shell UI](./shell-ui.md) — brand, three panels, empty states.
-- [Run demo stub](./run-demo-stub.md) — Run demo button surfaces the Day-1 stub error (501).
+- [Run demo](./run-demo.md) — **Run demo** streams the six tasks. Main stays free of conflict markers.
