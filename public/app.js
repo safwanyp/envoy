@@ -7,7 +7,8 @@ import { appendTrail } from './trail.js';
 /** @typedef {import('./state').ProjectSnapshot} ProjectSnapshot */
 /** @typedef {import('./state').Narration} Narration */
 
-const STEP_MS = 1700;
+const STEP_MS = 1500;
+const KEY_STEP_MS = 3000;
 
 const project = new URL(location.href).searchParams.get('project') ?? 'demo';
 
@@ -142,7 +143,7 @@ async function drain() {
       announce({ ...narration, step: narrated });
       if (trail) appendTrail(trail, narration, narrated);
       spotlight(narration);
-      await wait(STEP_MS);
+      await wait(narration.tone === 'info' || narration.tone === 'ok' ? STEP_MS : KEY_STEP_MS);
     }
   }
 }
