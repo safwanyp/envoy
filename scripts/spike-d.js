@@ -63,7 +63,7 @@ for (const model of models) {
   scores.push({ model, ok, of: rounds });
 }
 
-scores.sort((a, b) => b.ok - a.ok || a.model.localeCompare(b.model));
-const winner = scores[0];
-console.log(JSON.stringify({ scores, winner: winner?.model ?? null }, null, 2));
-if (!winner || winner.ok === 0) process.exit(1);
+const best = Math.max(...scores.map((score) => score.ok));
+const tied = scores.filter((score) => score.ok === best).map((score) => score.model);
+console.log(JSON.stringify({ scores, tied }, null, 2));
+if (best === 0) process.exit(1);
