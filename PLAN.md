@@ -301,22 +301,22 @@ Today is Sun Oct 11. Submit on **Wed Oct 14** (confirm the cutoff time/zone on t
 ### Day 1 (Sun 11 – Mon 12 midday): de-risk + skeleton
 - [x] Scaffold: package.json, tsconfigs, `cloudflare.config.ts`, `cf workers types`, `pnpm typecheck` green on an empty Worker.
 - [x] **Spike A:** from a DO, create repo → isomorphic-git clone into MemoryFS → commit → push. Confirm token format (`split('?expires=')[0]`).
-- [ ] **Spike B:** fork via binding, push divergent commits to the fork and main, run iso-git `merge` in memory (clean case + conflict case). Local merge classification is tested. A remote fork through the binding is not.
-- [ ] **Spike C:** create an event subscription for main `pushed` → queue → consumer logs the event. `scripts/subscribe.js` posts the subscription. It has not been run against an account.
-- [ ] **Spike D:** pick the LLM. Run 10 tool-call round trips and keep the most reliable model. The demo uses scripted edits. `src/agent/llm.js` calls Workers AI when a binding is passed. No live model bake-off yet.
-- [x] `scripts/seed.js` + `demo/seed-repo`. The script has not been run against an account.
+- [x] **Spike B:** fork via binding, push divergent commits to the fork and main, run iso-git merge in memory (clean case + conflict case). `pnpm spike:b` pushed one Artifacts fork per attempt and classified a clean merge and a conflict replay. `POST /api/spike/b` on `pnpm dev:cf` committed `fork: "binding"` to `demo-binding-agent-4`.
+- [ ] **Spike C:** create an event subscription for main `pushed`, deliver it to a queue, and have the consumer log the event. `pnpm subscribe` was run. Creating `envoy-artifacts-events` returned 403. The token can list queues and subscriptions. It cannot create them. No subscription exists, and push events are not flowing. `pnpm deploy` was not run.
+- [x] **Spike D:** pick the LLM. Ten tool-call rounds on `@cf/meta/llama-3.3-70b-instruct-fp8-fast` and `@cf/meta/llama-3.1-8b-instruct-fast` both scored 10/10. The demo keeps the 70b model. `createDemoEdit` calls Workers AI when the AI binding is present and keeps the scripted edit when the model write lacks the task marker.
+- [x] `scripts/seed.js` + `demo/seed-repo`. `pnpm seed` created `demo-main` on the account. A second run prints `created: false` and does not push.
 - [x] Pure modules + tests: `intent.js`, `symbols.js`, `radar.js`.
 
 ### Day 2 (Mon 12 – Tue 13 midday): core loop
-- [x] AgentRunner applies one scripted edit at `POST /attempt`. The demo does not call that object. `runProject` calls the same `applyTaskEdit` and commits on an in-memory branch. Forks are not pushed to Artifacts.
+- [x] AgentRunner applies one scripted edit at `POST /attempt`. The demo does not call that object. `runProject` calls the same `applyTaskEdit` and commits on an in-memory branch. `scripts/spike-b.js` then pushes each landed attempt to its own Artifacts fork.
 - [x] Coordinator: register agents, claims, radar responses, landing queue, ff + merge landing.
 - [x] Replay on conflict. The replay record stores trailer context from main. The scripted edit reads the current file and does not read that record.
-- [x] A landing that changes a claimed symbol marks the in-flight attempt stale and replays it. `POST /api/main-moved` records the push. It does not start a replay by itself.
+- [x] A landing that changes a claimed symbol marks the in-flight attempt stale and replays it. `POST /api/main-moved` with overlapping symbol changes starts that replay. The same repo and after does not start a second one.
 - [x] Run all 6 demo tasks on one simulated clock so their edits overlap. `runProject` is a single loop, not six Workers.
 
 ### Day 3 (Tue 13 – Wed 14 morning): visible + shippable
 - [x] UI: radar, timeline, lineage over WebSocket.
-- [x] Make the demo deterministic: seed tasks and stagger starts. The six tasks use scripted edits so the run repeats without a model.
+- [x] Make the demo deterministic: seed tasks and stagger starts. Without an AI binding the six tasks use scripted edits. With `pnpm dev:cf` the same loop calls Workers AI and falls back to the scripted file when the model write is unusable.
 - [x] README with run instructions, and the MIT LICENSE.
 - [ ] `pnpm deploy`. Left for the owner.
 - [ ] Record the video (5–10 min): problem → idea → live demo → how it's built on Artifacts → what's next.
