@@ -25,6 +25,27 @@ test('complete returns the tool call a model produced', async () => {
   ]);
 });
 
+test('complete disposes an RPC model response after reading the tool call', async () => {
+  let disposed = 0;
+  const ai = {
+    /**
+     * @returns {Promise<{ response: string, tool_calls: { name: string, arguments: Record<string, unknown> }[], [Symbol.dispose]: () => void }>}
+     */
+    async run() {
+      return {
+        response: 'ok',
+        tool_calls: [{ name: 'write_file', arguments: { path: 'src/server.js', content: 'export function health(' } }],
+        [Symbol.dispose]() {
+          disposed += 1;
+        },
+      };
+    },
+  };
+  const result = await complete(ai, [{ role: 'user', content: 'add health' }], [{ name: 'write_file' }]);
+  assert.equal(result.toolCalls[0]?.name, 'write_file');
+  assert.equal(disposed, 1);
+});
+
 test('complete without a binding reports that AI is unavailable', async () => {
   const result = await complete(undefined, [], []);
   assert.deepEqual(result, { ok: false, error: 'ai_unavailable', text: '', toolCalls: [] });

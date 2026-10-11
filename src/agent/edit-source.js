@@ -28,10 +28,10 @@ const MARKERS = {
 
 /**
  * @param {ToolCaller | undefined} ai
- * @returns {{ edit: (ctx: DemoEditContext) => Promise<Record<string, string>>, tally: { calls: number, workersAi: number, scripted: number } }}
+ * @returns {{ edit: (ctx: DemoEditContext) => Promise<Record<string, string>>, tally: { calls: number, workersAi: number, scripted: number, lastError: string } }}
  */
 export function createDemoEdit(ai) {
-  const tally = { calls: 0, workersAi: 0, scripted: 0 };
+  const tally = { calls: 0, workersAi: 0, scripted: 0, lastError: '' };
   /** @type {Map<string, Record<string, string>>} */
   const cache = new Map();
   return {
@@ -54,7 +54,8 @@ export function createDemoEdit(ai) {
       let produced;
       try {
         produced = await fromModel(ai, ctx, scripted);
-      } catch {
+      } catch (err) {
+        tally.lastError = err instanceof Error ? err.message : 'ai failed';
         tally.scripted += 1;
         cache.set(key, scripted);
         return scripted;
