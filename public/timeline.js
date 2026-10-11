@@ -14,17 +14,19 @@ export function renderTimeline(root, state) {
     item.append(title);
     const meta = document.createElement('p');
     meta.className = 'commit-meta';
+    const sha = document.createElement('code');
+    sha.textContent = commit.sha.slice(0, 7);
     const who = commit.agent ?? 'envoy';
     const task = commit.task ?? 'merge';
-    meta.textContent = `${who} · ${task} · ${commit.sha.slice(0, 7)}`;
-    item.append(meta);
+    meta.append(sha, ` ${who} · ${task}`);
     if (commit.replayOf) {
-      const badge = document.createElement('p');
+      const badge = document.createElement('span');
       badge.className = 'badge';
       const count = state.agents.filter((agent) => agent.taskId === commit.task && agent.replayOf).length;
       badge.textContent = `replayed ×${Math.max(count, 1)}`;
-      item.append(badge);
+      meta.append(badge);
     }
+    item.append(meta);
     root.append(item);
   }
 }
