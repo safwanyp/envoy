@@ -44,6 +44,68 @@ export async function pushFiles(input) {
 }
 
 /**
+ * Clone `main`, write `files` on top, and push a fast-forward when anything changed.
+ * @param {{ remote: string, token: string, files: Record<string, string>, message: string, http?: typeof http }} input
+ * @returns {Promise<{ oid: string, created: boolean }>}
+ */
+export async function commitOnRemote(input) {
+  const dir = '/repo';
+  const fs = new MemoryFS();
+  const client = input.http ?? http;
+  await git.clone({
+    fs,
+    http: client,
+    dir,
+    url: input.remote,
+    ref: 'main',
+    singleBranch: true,
+    onAuth: () => onAuth(input.token),
+  });
+  let changed = false;
+  for (const [path, data] of Object.entries(input.files)) {
+    const current = await readOptional(fs, `${dir}/${path}`);
+    if (current === data) continue;
+    await fs.promises.writeFile(`${dir}/${path}`, data);
+    await git.add({ fs, dir, filepath: path });
+    changed = true;
+  }
+  if (!changed) {
+    const oid = await git.resolveRef({ fs, dir, ref: 'main' });
+    return { oid, created: false };
+  }
+  const oid = await git.commit({
+    fs,
+    dir,
+    message: input.message,
+    author: { name: 'Envoy', email: 'envoy@localhost' },
+  });
+  await git.push({
+    fs,
+    http: client,
+    dir,
+    url: input.remote,
+    ref: 'main',
+    remoteRef: 'main',
+    onAuth: () => onAuth(input.token),
+  });
+  return { oid, created: true };
+}
+
+/**
+ * @param {MemoryFS} fs
+ * @param {string} path
+ * @returns {Promise<string | null>}
+ */
+async function readOptional(fs, path) {
+  try {
+    const data = await fs.promises.readFile(path, 'utf8');
+    return typeof data === 'string' ? data : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * @param {number} ms
  * @returns {Promise<void>}
  */

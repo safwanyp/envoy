@@ -1,7 +1,9 @@
 /// <reference types="node" />
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { changedSymbols, extractSymbols } from './symbols.js';
+import { applyTaskEdit } from '../agent/edits.js';
+import { SEED_FILES } from '../demo/seed-files.js';
+import { changedSymbols, extractSymbols, symbolChanges } from './symbols.js';
 
 test('extractSymbols reads top-level functions, arrows, and classes', () => {
   const source = [
@@ -111,4 +113,11 @@ test('a symbol whose own lines did not change is left out', () => {
   const before = 'function kept() {\n  return 1;\n}\n\nfunction edited() {\n  return 1;\n}';
   const after = '\nfunction kept() {\n  return 1;\n}\n\nfunction edited() {\n  return 2;\n}';
   assert.deepEqual(changedSymbols(before, after), ['edited']);
+});
+
+test('a rate-limit edit reports validateLogin', () => {
+  const edited = { ...SEED_FILES, ...applyTaskEdit('t_rate_limit', SEED_FILES) };
+  const changes = symbolChanges(SEED_FILES, edited);
+  const auth = changes.find((change) => change.path === 'src/routes/auth.js');
+  assert.equal(auth?.symbols.includes('validateLogin'), true);
 });
