@@ -37,7 +37,9 @@ test('a model write that contains the task marker replaces that file', async () 
   });
   assert.equal(files['src/lib/limiter.js'], 'export function allowLogin(key) {\n  return true;\n}\n');
   assert.equal((files['src/routes/auth.js'] ?? '').includes('allowLogin('), true);
-  assert.deepEqual(demo.tally, { calls: 1, workersAi: 1, scripted: 0 });
+  assert.equal(demo.tally.calls, 1);
+  assert.equal(demo.tally.workersAi, 1);
+  assert.equal(demo.tally.scripted, 0);
 });
 
 test('a model with no tool call keeps the scripted rate limiter', async () => {
@@ -60,7 +62,9 @@ test('a model with no tool call keeps the scripted rate limiter', async () => {
     touches: ['src/routes/auth.js#validateLogin'],
   });
   assert.equal((files['src/lib/limiter.js'] ?? '').includes('hits.get'), true);
-  assert.deepEqual(demo.tally, { calls: 1, workersAi: 0, scripted: 1 });
+  assert.equal(demo.tally.calls, 1);
+  assert.equal(demo.tally.workersAi, 0);
+  assert.equal(demo.tally.scripted, 1);
 });
 
 test('without a binding the edit is the scripted one', async () => {
@@ -74,5 +78,7 @@ test('without a binding the edit is the scripted one', async () => {
     touches: ['src/server.js#health'],
   });
   assert.equal((files['src/server.js'] ?? '').includes('export function health('), true);
-  assert.deepEqual(demo.tally, { calls: 0, workersAi: 0, scripted: 1 });
+  assert.equal(demo.tally.calls, 0);
+  assert.equal(demo.tally.workersAi, 0);
+  assert.equal(demo.tally.scripted, 1);
 });

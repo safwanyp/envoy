@@ -10,12 +10,25 @@ export async function complete(ai, messages, tools, model = '@cf/meta/llama-3.3-
     return { ok: false, error: 'ai_unavailable', text: '', toolCalls: [] };
   }
   const response = await ai.run(model, { messages, tools });
-  return {
-    ok: true,
-    error: null,
-    text: textFrom(response),
-    toolCalls: toolCallsFrom(response),
-  };
+  try {
+    return {
+      ok: true,
+      error: null,
+      text: textFrom(response),
+      toolCalls: toolCallsFrom(response),
+    };
+  } finally {
+    disposeRpc(response);
+  }
+}
+
+/**
+ * @param {unknown} value
+ */
+function disposeRpc(value) {
+  if (!value || typeof value !== 'object' || !(Symbol.dispose in value)) return;
+  const dispose = /** @type {{ [Symbol.dispose]?: () => void }} */ (value)[Symbol.dispose];
+  dispose?.();
 }
 
 /**
