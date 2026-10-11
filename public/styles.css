@@ -218,6 +218,7 @@ code {
 
 .now-detail {
   max-width: 900px;
+  min-height: 3em;
   margin-top: 4px;
   color: #3f3f46;
   font-size: 14px;
