@@ -81,6 +81,8 @@ export class Coordinator extends DurableObject {
       try {
         const control = bindingControl(artifacts);
         const files = { ...SEED_FILES, ...applyTaskEdit('t_health', SEED_FILES) };
+        const server = files['src/server.js'] ?? '';
+        files['src/server.js'] = server.replace('return { ok: true };', 'return { ok: true, fork: "binding" };');
         const published = await publishAgentFork(control, {
           sourceName: 'demo-main',
           forkName: 'demo-binding-agent-4',
@@ -90,7 +92,7 @@ export class Coordinator extends DurableObject {
         });
         const text = await control.readText(published.name, 'main', 'src/server.js');
         return Response.json({
-          ok: text?.includes('export function health(') === true,
+          ok: text?.includes('fork: "binding"') === true,
           fork: published.name,
           commit: published.commit,
           created: published.created,
@@ -203,10 +205,6 @@ export class Coordinator extends DurableObject {
   }
 }
 
-/**
- * @param {unknown} body
- * @returns {{ repo: string, after: string } | null}
- */
 /**
  * @param {Env} env
  * @returns {Artifacts | undefined}

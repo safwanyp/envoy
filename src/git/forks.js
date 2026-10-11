@@ -249,7 +249,11 @@ export function bindingControl(artifacts) {
       try {
         repo = await artifacts.get(name);
         const file = await repo.readFile({ ref, path });
-        return file ? await file.text() : null;
+        try {
+          return file ? await file.text() : null;
+        } finally {
+          disposeRpc(file);
+        }
       } catch (err) {
         if (isMissing(err)) return null;
         throw err;
@@ -258,6 +262,15 @@ export function bindingControl(artifacts) {
       }
     },
   };
+}
+
+/**
+ * @param {unknown} value
+ */
+function disposeRpc(value) {
+  if (!value || typeof value !== 'object' || !(Symbol.dispose in value)) return;
+  const dispose = /** @type {{ [Symbol.dispose]?: () => void }} */ (value)[Symbol.dispose];
+  dispose?.();
 }
 
 /**
