@@ -82,6 +82,21 @@ test('a symbol-level proceed names only agents on the same function', () => {
   assert.match(line.detail, /^Overlaps agent-2 on validateLogin\(\)/);
 });
 
+test('a file-level proceed names only the shared files', () => {
+  /** @type {ProjectSnapshot} */
+  const busy = {
+    ...state,
+    agents: [...state.agents, { ...yielder, attemptId: 'a_2', agent: 'agent-3', status: 'editing' }],
+    claims: [
+      { attemptId: 'a_1', path: 'src/routes/auth.js', symbol: 'validateLogin' },
+      { attemptId: 'a_2', path: 'src/lib/db.js', symbol: 'getUser' },
+      { attemptId: 'a_2', path: 'src/routes/auth.js', symbol: 'login' },
+    ],
+  };
+  const line = narrate({ type: 'proceed', attemptId: 'a_2', agent: 'agent-3', level: 'file' }, busy);
+  assert.equal(line.detail, 'Shares src/routes/auth.js with agent-1, but edits a different function, so it goes ahead.');
+});
+
 test('the summary counts landed tasks, yields, and replays', () => {
   assert.equal(summarize(state), 'Done. 2 of 2 tasks landed on main, with 1 yield and 1 replay.');
 });
