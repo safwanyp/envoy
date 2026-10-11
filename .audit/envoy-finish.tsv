@@ -11,3 +11,4 @@ ts	phase	decision	why	evidence	result
 2026-10-11T03:10:32Z	verify	posted the demo to local cf dev and read the saved snapshot	the button and the API have to show the same landed rate-limit replay	/opt/cursor/artifacts/demo-headers.txt, /opt/cursor/artifacts/state.json	HTTP 200, replayOf a_1, yield and stale present
 2026-10-11T03:10:32Z	verify	clicked Run demo in the browser on desktop and a narrow viewport	the panels have to render the snapshot a person sees	/opt/cursor/artifacts/envoy-run-demo.mp4	status ended at agent-5 landed (merge)
 2026-10-11T03:10:32Z	shell	deleted prose comments and kept the type JSDoc	comments that restated the code were removed after review	src/git/land.js, src/coordinator/engine.js	typecheck green
+2026-10-11T03:11:08Z	plan	rewrote the day-2 checkboxes so they match the in-memory loop	the checked lines claimed a fork push and a queue-driven replay that the code does not do	PLAN.md day 2	wording matches coordinator.js and runner.js

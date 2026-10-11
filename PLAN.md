@@ -308,10 +308,10 @@ Today is Sun Oct 11. Submit on **Wed Oct 14** (confirm the cutoff time/zone on t
 - [x] Pure modules + tests: `intent.js`, `symbols.js`, `radar.js`.
 
 ### Day 2 (Mon 12 – Tue 13 midday): core loop
-- [x] AgentRunner end to end for one agent: fork → plan → edit → commit with trailers → push fork.
+- [x] AgentRunner applies one scripted edit at `POST /attempt`. The coordinator commits that edit on an in-memory branch and merges it. Forks are not pushed to Artifacts.
 - [x] Coordinator: register agents, claims, radar responses, landing queue, ff + merge landing.
 - [x] Replay on conflict, with replay context built from main's trailers.
-- [x] Main-moved handler → stale signals → proactive replay.
+- [x] A landing that changes a claimed symbol marks the in-flight attempt stale and replays it. `POST /api/main-moved` records the push. It does not start a replay by itself.
 - [x] Run all 6 demo tasks concurrently. Fix whatever breaks.
 
 ### Day 3 (Tue 13 – Wed 14 morning): visible + shippable
