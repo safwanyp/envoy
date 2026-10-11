@@ -13,12 +13,13 @@ function onAuth(token) {
 
 /**
  * Init a repo in memory, commit `files`, and push `main`.
- * @param {{ remote: string, token: string, files: Record<string, string>, message: string }} input
+ * @param {{ remote: string, token: string, files: Record<string, string>, message: string, http?: typeof http }} input
  * @returns {Promise<{ oid: string }>}
  */
 export async function pushFiles(input) {
   const dir = '/workspace';
   const fs = new MemoryFS();
+  const client = input.http ?? http;
   await git.init({ fs, dir, defaultBranch: 'main' });
   for (const [path, data] of Object.entries(input.files)) {
     await fs.promises.writeFile(`${dir}/${path}`, data);
@@ -32,7 +33,7 @@ export async function pushFiles(input) {
   });
   await git.push({
     fs,
-    http,
+    http: client,
     dir,
     url: input.remote,
     ref: 'main',
@@ -75,14 +76,18 @@ export async function runSpikeA(artifacts) {
     let text = '';
     let lastError = '';
     for (let attempt = 0; attempt < 10; attempt++) {
+      /** @type {ArtifactsRepo | undefined} */
+      let repo;
       try {
-        using repo = await artifacts.get(name);
+        repo = await artifacts.get(name);
         const file = await repo.readFile({ ref: 'main', path: 'README.md' });
         text = file ? await file.text() : '';
         if (text === '# spike a\n') break;
       } catch (err) {
         lastError = err instanceof Error ? err.message : String(err);
         text = '';
+      } finally {
+        repo?.[Symbol.dispose]();
       }
       await sleep(500);
     }
