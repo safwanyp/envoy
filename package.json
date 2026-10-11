@@ -15,7 +15,8 @@
     "seed": "node scripts/seed.js",
     "subscribe": "node scripts/subscribe.js",
     "spike:b": "node scripts/spike-b.js",
-    "spike:d": "node scripts/spike-d.js"
+    "spike:d": "node scripts/spike-d.js",
+    "prove:queue": "node scripts/prove-queue.js"
   },
   "dependencies": {
     "isomorphic-git": "^1.36.1"
