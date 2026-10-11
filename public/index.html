@@ -13,6 +13,7 @@
         <p class="tagline">Many agents, one main branch.</p>
       </div>
       <div class="controls">
+        <a class="nav-link" href="#how">How it works</a>
         <p id="demo-status" class="demo-status" role="status" aria-live="polite"></p>
         <button type="button" id="run-demo" class="run-demo">Run demo</button>
       </div>
@@ -41,6 +42,90 @@
         <div id="lineage" class="panel-body" data-empty="No attempt chains yet."></div>
       </section>
     </main>
+
+    <section id="how" class="about" aria-labelledby="how-heading">
+      <div class="about-intro">
+        <h2 id="how-heading">How it works</h2>
+        <p>
+          Git merges text, so when two agents edit the same code someone has to fix the conflict by hand.
+          Envoy treats each change as an intent plus a diff. It keeps agents out of each other's way while
+          they work, and when a landing still conflicts, it re-runs the intent instead of asking anyone to
+          resolve markers.
+        </p>
+      </div>
+
+      <ol class="steps">
+        <li>
+          <h3>Claim</h3>
+          <p>
+            Before editing, each agent claims the files and functions it plans to touch. The Radar shows
+            every claim and who holds it.
+          </p>
+        </li>
+        <li>
+          <h3>Yield or proceed</h3>
+          <p>
+            If another agent already claimed the same function, the newcomer waits for it to land. Edits to
+            different functions in the same file go ahead.
+          </p>
+        </li>
+        <li>
+          <h3>Land</h3>
+          <p>
+            Landings run one at a time. Each agent commit carries <code>Envoy-Intent</code> trailers and an
+            intent file under <code>.envoy/intents/</code>, so the history says why, not only what.
+          </p>
+        </li>
+        <li>
+          <h3>Replay</h3>
+          <p>
+            When main changes code an in-flight agent claimed, or a merge conflicts, Envoy drops the stale
+            diff and runs the same intent again on current main. The new attempt is told what landed and
+            why. After two replays the task is flagged for a human.
+          </p>
+        </li>
+      </ol>
+
+      <div class="about-intro">
+        <h2 id="stack-heading">Stack</h2>
+      </div>
+      <dl class="stack" aria-labelledby="stack-heading">
+        <div>
+          <dt>Cloudflare Workers</dt>
+          <dd>Serves this page and the <code>/api</code> routes.</dd>
+        </div>
+        <div>
+          <dt>Durable Objects</dt>
+          <dd>
+            One Coordinator per project keeps claims, attempts, and landing order in SQLite, and pushes
+            every change to this page over WebSockets.
+          </dd>
+        </div>
+        <div>
+          <dt>Artifacts</dt>
+          <dd>Hosts the Git repos, with one main repo and one fork per agent attempt.</dd>
+        </div>
+        <div>
+          <dt>Queues</dt>
+          <dd>
+            Delivers the main repo's push events to the Worker, which checks open claims and starts early
+            replays.
+          </dd>
+        </div>
+        <div>
+          <dt>Workers AI</dt>
+          <dd>Llama 3.3 70B writes the agents' edits, with scripted edits as a fallback.</dd>
+        </div>
+        <div>
+          <dt>isomorphic-git</dt>
+          <dd>Clones, commits, merges, and pushes in memory inside the Worker.</dd>
+        </div>
+        <div>
+          <dt>Frontend</dt>
+          <dd>Plain JavaScript and CSS with no framework, built with the <code>cf</code> CLI and Vite.</dd>
+        </div>
+      </dl>
+    </section>
 
     <script type="module" src="/app.js"></script>
   </body>
