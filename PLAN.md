@@ -300,7 +300,7 @@ Today is Sun Oct 11. Submit on **Wed Oct 14** (confirm the cutoff time/zone on t
 
 ### Day 1 (Sun 11 – Mon 12 midday): de-risk + skeleton
 - [x] Scaffold: package.json, tsconfigs, `cloudflare.config.ts`, `cf workers types`, `pnpm typecheck` green on an empty Worker.
-- [ ] **Spike A:** from a DO, create repo → isomorphic-git clone into MemoryFS → commit → push. Confirm token format (`split('?expires=')[0]`).
+- [x] **Spike A:** from a DO, create repo → isomorphic-git clone into MemoryFS → commit → push. Confirm token format (`split('?expires=')[0]`).
 - [ ] **Spike B:** fork via binding, push divergent commits to the fork and main, run iso-git `merge` in memory (clean case + conflict case).
 - [ ] **Spike C:** create an event subscription for main `pushed` → queue → consumer logs the event.
 - [ ] **Spike D:** pick the LLM. Run 10 tool-call round trips and keep the most reliable model.
