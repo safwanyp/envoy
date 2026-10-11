@@ -51,6 +51,8 @@ pnpm subscribe
 
 `pnpm seed` creates `<project>-main` in the `envoy` namespace. It pushes `demo/seed-repo` only when it creates the repo. A later run prints the existing commit. `pnpm subscribe` subscribes that repo's `pushed` events to the queue. If queue creation returns 403, the script names the missing permission and exits. Override the project with `ENVOY_PROJECT` (default `demo`).
 
+`pnpm dev:cf` does not receive those remote queue messages. With that server running, `pnpm prove:queue` pushes a health edit, pulls the event, and sends it to the local queue handler. The handler reads the two commits and starts a replay when an open claim overlaps. `pnpm deploy` is what attaches the Worker as the consumer.
+
 Remote Artifacts and Workers AI need a paid Workers plan:
 
 ```bash
@@ -74,6 +76,7 @@ Deploy is yours to run. This tree does not deploy itself.
 | `pnpm test` | `node --test` for radar, trailers, merge, and the six-task run. |
 | `pnpm seed` | Create the Artifacts main repo and push `demo/seed-repo` on the first create. |
 | `pnpm subscribe` | Create `envoy-artifacts-events` if needed, then subscribe main `pushed` events. |
+| `pnpm prove:queue` | Push `demo-main`, pull the `cf.artifacts.repo.pushed` event, and replay it through the local queue handler. Requires `pnpm dev:cf`. |
 | `pnpm spike:b` | Fork each demo attempt on Artifacts and classify a clean merge and a conflict. |
 | `pnpm spike:d` | Score two Workers AI models on ten tool-call rounds. |
 | `pnpm deploy` | `cf deploy --mode cf` |
