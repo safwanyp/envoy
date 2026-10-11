@@ -359,6 +359,85 @@ body:has(.run-demo:disabled) .panel-lineage .lamp { animation-delay: 300ms; }
   color: var(--ink-soft);
 }
 
+.radar-row,
+.commit,
+.lineage-task {
+  margin: 0 0 0.9rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.radar-path,
+.commit h3,
+.lineage-task h3 {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.radar-symbol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  margin: 0.25rem 0;
+}
+
+.symbol-name,
+.commit-meta,
+.lineage-intent {
+  margin: 0;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+.chip,
+.badge {
+  display: inline-block;
+  margin: 0;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+}
+
+.radar-row.overlap {
+  box-shadow: inset 3px 0 0 var(--signal);
+}
+
+.agent-1 { background: #f3c7b8; }
+.agent-2 { background: #f6e2a8; }
+.agent-3 { background: #c9ddd4; }
+.agent-4 { background: #c5d4e4; }
+.agent-5 { background: #e4d4c5; }
+.agent-6 { background: #ddd4e4; }
+
+.status-yielding,
+.status-replaying,
+.status-needs-human {
+  font-weight: 700;
+}
+
+.status-needs-human {
+  color: var(--signal);
+}
+
+.commit-meta {
+  margin-top: 0.2rem;
+}
+
+.lineage-task ol {
+  margin: 0.4rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.lineage-task li {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
 @keyframes settle {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }

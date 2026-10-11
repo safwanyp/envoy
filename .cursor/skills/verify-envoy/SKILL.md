@@ -57,8 +57,8 @@ Stable handles today:
 | `#demo-status` | status region (`role="status"`) |
 | `#radar`, `#timeline`, `#lineage` | panel bodies |
 | `/api/health?project=demo` | health |
-| `/api/state?project=demo` | empty coordinator state |
-| `POST /api/demo?project=demo` | demo trigger (stub → 501 until Day 2) |
+| `/api/state?project=demo` | coordinator snapshot (empty until Run demo) |
+| `POST /api/demo?project=demo` | demo trigger (ndjson stream of the six-task run) |
 
 Do not use coordinate clicks. Do not call Durable Object internals or test-only setters — there are none yet.
 
@@ -70,8 +70,7 @@ Proof standards:
 
 - Exercise the real user path (browser button or documented `curl`), not internal module imports.
 - Capture the action and the resulting state (status text, HTTP status + body, ARIA/screenshot).
-- For mutations, confirm a second read of visible or API state. Today's demo is a stub: proof is the `501` + `demo_not_wired` response and the status line text, not a successful multi-agent run.
-- Side effects: none expected for health/state; demo must not spawn agents yet.
+- For mutations, confirm a second read of visible or API state. After **Run demo**, `GET /api/state` includes the landed commits. The rate-limit commit has `replayOf` set.
 
 ## Cleanup
 
