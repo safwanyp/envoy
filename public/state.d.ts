@@ -50,6 +50,17 @@ export interface LineageGroup {
   attempts: AttemptView[];
 }
 
+export type Tone = 'info' | 'ok' | 'warn' | 'danger' | 'replay';
+
+export interface Narration {
+  tone: Tone;
+  label: string;
+  title: string;
+  detail: string;
+  focus: string[];
+  sha: string | null;
+}
+
 export interface ProjectSnapshot {
   agents: AttemptView[];
   claims: Claim[];

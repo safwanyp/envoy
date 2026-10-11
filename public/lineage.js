@@ -19,6 +19,8 @@ export function renderLineage(root, state) {
     const list = document.createElement('ol');
     for (const attempt of group.attempts) {
       const item = document.createElement('li');
+      item.dataset.attempt = attempt.attemptId;
+      item.dataset.key = `attempt:${attempt.attemptId}:${attempt.status}`;
       const id = document.createElement('code');
       id.textContent = attempt.attemptId;
       const status = document.createElement('span');

@@ -14,34 +14,52 @@
       </div>
       <div class="controls">
         <a class="nav-link" href="#how">How it works</a>
-        <p id="demo-status" class="demo-status" role="status" aria-live="polite"></p>
         <button type="button" id="run-demo" class="run-demo">Run demo</button>
       </div>
     </header>
 
-    <main class="panels">
-      <section class="panel" aria-labelledby="radar-heading">
+    <section id="now" class="now" data-tone="info" aria-label="Current step">
+      <div class="now-meta">
+        <span id="demo-label" class="now-label">Ready</span>
+        <span id="demo-step" class="now-step"></span>
+      </div>
+      <p id="demo-status" class="demo-status" role="status" aria-live="polite"></p>
+      <p id="demo-detail" class="now-detail"></p>
+    </section>
+
+    <div class="stage">
+      <main class="panels">
+        <section class="panel" aria-labelledby="radar-heading">
+          <header class="panel-head">
+            <h2 id="radar-heading">Radar</h2>
+            <p class="panel-note">Claimed symbols</p>
+          </header>
+          <div id="radar" class="panel-body" data-empty="No active claims yet."></div>
+        </section>
+        <section class="panel" aria-labelledby="timeline-heading">
+          <header class="panel-head">
+            <h2 id="timeline-heading">Main timeline</h2>
+            <p class="panel-note">Commits on main</p>
+          </header>
+          <div id="timeline" class="panel-body" data-empty="No commits on main yet."></div>
+        </section>
+        <section class="panel" aria-labelledby="lineage-heading">
+          <header class="panel-head">
+            <h2 id="lineage-heading">Lineage</h2>
+            <p class="panel-note">Attempts per task</p>
+          </header>
+          <div id="lineage" class="panel-body" data-empty="No attempt chains yet."></div>
+        </section>
+      </main>
+
+      <aside class="panel trail-panel" aria-labelledby="trail-heading">
         <header class="panel-head">
-          <h2 id="radar-heading">Radar</h2>
-          <p class="panel-note">Claimed symbols</p>
+          <h2 id="trail-heading">Event trail</h2>
+          <p class="panel-note">Newest first</p>
         </header>
-        <div id="radar" class="panel-body" data-empty="No active claims yet."></div>
-      </section>
-      <section class="panel" aria-labelledby="timeline-heading">
-        <header class="panel-head">
-          <h2 id="timeline-heading">Main timeline</h2>
-          <p class="panel-note">Commits on main</p>
-        </header>
-        <div id="timeline" class="panel-body" data-empty="No commits on main yet."></div>
-      </section>
-      <section class="panel" aria-labelledby="lineage-heading">
-        <header class="panel-head">
-          <h2 id="lineage-heading">Lineage</h2>
-          <p class="panel-note">Attempts per task</p>
-        </header>
-        <div id="lineage" class="panel-body" data-empty="No attempt chains yet."></div>
-      </section>
-    </main>
+        <ol id="trail" class="trail" data-empty="Each step of the run appears here."></ol>
+      </aside>
+    </div>
 
     <section id="how" class="about" aria-labelledby="how-heading">
       <div class="about-intro">
