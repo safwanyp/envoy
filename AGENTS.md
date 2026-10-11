@@ -17,3 +17,15 @@ Read `PLAN.md` first. It is the source of truth for scope, architecture, and sch
 - Artifacts docs: https://developers.cloudflare.com/artifacts/llms.txt. Prefer the docs over memory, because the product is in beta.
 - Release Artifacts repo handles with `using` (or `Symbol.dispose` in `finally`).
 - Local default mode has no Artifacts/AI. Use `pnpm dev:cf` / `pnpm deploy` (`--mode cf`) when you need remote Artifacts + Workers AI (paid Workers plan).
+
+## Cursor Cloud specific instructions
+
+`cf` loads `cloudflare.config.ts` only on Node.js >= 22.18. Use nvm's default Node (`nvm which default`, v22.23.3 on this image) and put that directory first on `PATH` before `pnpm dev`, `pnpm build`, `pnpm types`, or `pnpm deploy`:
+
+```bash
+export NVM_DIR="$HOME/.nvm"
+. "$NVM_DIR/nvm.sh"
+export PATH="$(dirname "$(nvm which default)"):$PATH"
+```
+
+`nvm use 22` still resolves `node` to `/exec-daemon/node` (v22.14). Dev, test, and doctor commands stay the ones in `README.md` and `.cursor/skills/verify-envoy/`. Local `pnpm dev` listens on `http://127.0.0.1:8791` and does not need Cloudflare credentials.
