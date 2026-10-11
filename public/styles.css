@@ -212,16 +212,25 @@ body:has(.run-demo:disabled) .demo-status::before {
 }
 
 .radar-symbol {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: 8.5em 1fr;
+  align-items: start;
+  gap: 8px;
   padding: 2px 0;
 }
 
 .symbol-name {
-  min-width: 7em;
+  overflow: hidden;
+  padding-top: 1px;
   color: var(--muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
 /* Timeline */
