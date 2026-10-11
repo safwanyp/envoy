@@ -37,7 +37,9 @@ export function narrate(event, state) {
     if (event.level === 'clear' || neighbours.length === 0) {
       detail = `Claims ${list(mine.map(target))}. Nobody else is working there.`;
     } else if (event.level === 'file') {
-      detail = `Shares ${list(unique(mine.map((claim) => claim.path)))} with ${list(neighbours)}, but edits a different function, so it goes ahead.`;
+      const taken = new Set(state.claims.filter((claim) => claim.attemptId !== event.attemptId).map((claim) => claim.path));
+      const shared = unique(mine.map((claim) => claim.path)).filter((path) => taken.has(path));
+      detail = `Shares ${list(shared)} with ${list(neighbours)}, but edits a different function, so it goes ahead.`;
     } else {
       const rivals = othersOnSymbols(state, event.attemptId, mine);
       detail = `Overlaps ${list(rivals.length > 0 ? rivals : neighbours)} on ${list(mine.map(target))}. Its task started first, so it goes ahead.`;
