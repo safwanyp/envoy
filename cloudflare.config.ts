@@ -45,18 +45,15 @@ function envoyWorker(name: string, opts: { withCloudBindings: boolean }) {
               // Artifacts has no local simulator; paid plan required.
               dev: { remote: true },
             }),
-            AI: bindings.ai({}),
+            AI: bindings.ai({
+              dev: { remote: true },
+            }),
           }
         : {}),
     },
   };
 }
 
-/**
- * Modes:
- * - default / development / production → fully local (no Artifacts/AI)
- * - cf → remote Artifacts + Workers AI (`cf dev --mode cf`, `cf deploy --mode cf`)
- */
 export default defineConfig((ctx) => {
   switch (ctx.mode) {
     case 'cf': {
