@@ -21,7 +21,7 @@
     "delayMs": 0,
     "prompt": "Rename user field `email` → `emailAddress` everywhere",
     "intent": "Rename user field email to emailAddress everywhere",
-    "touches": ["src/lib/db.js", "src/routes/auth.js", "src/routes/users.js"]
+    "touches": ["src/lib/db.js#getUser", "src/lib/db.js#insertUser", "src/routes/users.js#getUserByEmail", "src/routes/auth.js#login", "src/routes/auth.js#signup"]
   },
   {
     "id": "t_health",
