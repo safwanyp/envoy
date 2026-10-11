@@ -11,7 +11,7 @@
     "types": "cf workers types",
     "types:cf": "cf workers types --mode cf",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.ui.json",
-    "test": "node --test 'src/**/*.test.js'",
+    "test": "node --test 'src/**/*.test.js' 'public/**/*.test.js'",
     "seed": "node scripts/seed.js",
     "subscribe": "node scripts/subscribe.js",
     "spike:b": "node scripts/spike-b.js",

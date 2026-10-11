@@ -6,9 +6,11 @@
  */
 export function renderTimeline(root, state) {
   root.replaceChildren();
-  for (const commit of state.commits) {
+  for (const commit of [...state.commits].reverse()) {
     const item = document.createElement('article');
     item.className = 'commit';
+    item.dataset.sha = commit.sha;
+    item.dataset.key = `commit:${commit.sha}`;
     const title = document.createElement('h3');
     title.textContent = commit.summary ?? commit.message.trim();
     item.append(title);

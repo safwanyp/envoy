@@ -45,7 +45,9 @@ export function renderRadar(root, state) {
         const status = agent?.status ?? 'planning';
         const chip = document.createElement('span');
         chip.className = `chip ${agentClass(agent?.agent ?? '')} status-${status}`;
-        chip.title = status;
+        chip.title = `${claim.attemptId} ${status}`;
+        chip.dataset.attempt = claim.attemptId;
+        chip.dataset.key = `claim:${claim.attemptId}:${path}#${symbol}:${status}`;
         chip.textContent = agent?.agent ?? claim.attemptId;
         chips.append(chip);
       }
