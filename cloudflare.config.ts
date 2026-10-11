@@ -38,6 +38,9 @@ function envoyWorker(name: string, opts: { withCloudBindings: boolean }) {
         exportName: 'AgentRunner',
       }),
       ASSETS: bindings.assets(),
+      EVENTS: bindings.queue({
+        name: 'envoy-artifacts-events',
+      }),
       ...(opts.withCloudBindings
         ? {
             ARTIFACTS: bindings.artifacts({

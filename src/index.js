@@ -14,6 +14,23 @@ function projectIdFrom(url) {
 /**
  * @param {Request} request
  * @param {Env} env
+ * @param {URL} url
+ * @returns {Promise<Response>}
+ */
+async function enqueueLocal(request, env, url) {
+  if (url.hostname !== '127.0.0.1' && url.hostname !== 'localhost') {
+    return Response.json({ ok: false, error: 'loopback_only' }, { status: 403 });
+  }
+  const events = env.EVENTS;
+  if (!events) return Response.json({ ok: false, error: 'queue_unavailable' }, { status: 501 });
+  const body = await request.json();
+  await events.send(body);
+  return Response.json({ ok: true });
+}
+
+/**
+ * @param {Request} request
+ * @param {Env} env
  * @returns {Promise<Response>}
  */
 async function routeApi(request, env) {
@@ -33,6 +50,10 @@ export default {
   async fetch(request, env, ctx) {
     void ctx;
     const url = new URL(request.url);
+
+    if (url.pathname === '/api/queue/local' && request.method === 'POST') {
+      return enqueueLocal(request, env, url);
+    }
 
     if (url.pathname.startsWith('/api/')) {
       return routeApi(request, env);
